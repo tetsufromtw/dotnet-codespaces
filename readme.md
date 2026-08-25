@@ -1,61 +1,43 @@
-# GitHub Codespaces ♥️ C#
+# Transaction Integration Practice Project
 
-Want to try out C# for web development? 
+This repository is a small .NET solution prepared for a backend pair-programming
+exercise. It runs entirely inside GitHub Codespaces and does not require paid
+services, credentials, a database, or a real banking connection.
 
-This repo builds a Weather API, OpenAPI integration to test with [Scalar](https://learn.microsoft.com/aspnet/core/fundamentals/openapi/using-openapi-documents?view=aspnetcore-10.0#use-scalar-for-interactive-api-documentation), and displays the data in a web application using Blazor (.NET/C#).
+## Projects
 
-We've given you both a frontend and backend to play around with and where you go from here is up to you!
+- `SampleApp/BackEnd` — ASP.NET Core integration API on port `8080`
+- `SampleApp/FrontEnd` — Blazor transaction console on port `8081`
+- `Support/PartnerBankStub` — prebuilt local partner API on port `8082`
 
-Everything you do here is contained within this one codespace. There is no repository on GitHub yet. If and when you’re ready you can click "Publish Branch" and we’ll create your repository and push up your project. If you were just exploring then and have no further need for this code then you can simply delete your codespace and it's gone forever.
+The partner contract is in [`docs/partner-bank-api.md`](docs/partner-bank-api.md).
 
-### Run Options
+## Run in Codespaces
 
-[![Open in GitHub Codespaces](https://img.shields.io/static/v1?style=for-the-badge&label=GitHub+Codespaces&message=Open&color=lightgrey&logo=github)](https://codespaces.new/github/dotnet-codespaces)
-[![Open in Dev Container](https://img.shields.io/static/v1?style=for-the-badge&label=Dev+Container&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/github/dotnet-codespaces)
+Open **Run and Debug**, choose **Run All**, and start debugging. The configuration
+builds and launches all three projects. It opens the backend Scalar page and the
+Transaction Console automatically.
 
-You can also run this repository locally by following these instructions: 
-1. Clone the repo to your local machine `git clone https://github.com/github/dotnet-codespaces`
-1. Open repo in VS Code
+You can also run the projects from separate terminals:
 
-## Getting started
+```bash
+dotnet Support/PartnerBankStub/PartnerBankStub.dll --urls http://localhost:8082
+dotnet run --project SampleApp/BackEnd/BackEnd.csproj
+dotnet run --project SampleApp/FrontEnd/FrontEnd.csproj
+```
 
-1. **📤 One-click setup**: [Open a new Codespace](https://codespaces.new/github/dotnet-codespaces), giving you a fully configured cloud developer environment.
-2. **▶️ Run all, one-click again**: Use VS Code's built-in *Run* command and open the forwarded ports *8080* and *8081* in your browser. 
+Build the complete solution with:
 
-![Debug menu in VS Code showing Run All](images/RunAll.png)
+```bash
+dotnet build SampleApp/SampleApp.sln
+```
 
-3. The Blazor web app and Scalar can be open by heading to **/scalar** in your browser. On Scalar, head to the backend API and click "Test Request" to call and test the API. 
+## Practice rule
 
-![A website showing weather](images/BlazorApp.png)
+The real interview does not allow AI tools. Copilot code completion is disabled
+in this workspace so the exercise measures your own reasoning and coding. Use a
+fresh attempt branch for each practice run and keep `interview-sim` unchanged.
 
-!["UI showing testing an API"](images/scalar.png)
-
-
-4. **🔄 Iterate quickly:** Codespaces updates the server on each save, and VS Code's debugger lets you dig into the code execution.
-
-5. To stop running, return to VS Code, and click Stop twice in the debug toolbar. 
-
-![VS Code stop debuggin on both backend and frontend](images/StopRun.png)
-
-
-## Contributing
-
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
-
-When you submit a pull request, a CLA bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
-
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
-
-## Trademarks
-
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
-trademarks or logos is subject to and must follow 
-[Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
-Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
-Any use of third-party trademarks or logos are subject to those third-party's policies.
+Codespaces compute time still counts against the quota included with your GitHub
+account. Stop the Codespace after each practice session to avoid unnecessary
+usage; this project itself does not purchase or call any paid service.

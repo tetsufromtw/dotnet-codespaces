@@ -5,12 +5,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-builder.Services.AddHttpClient<WeatherForecastClient>(c =>
+builder.Services.AddHttpClient<TransactionClient>(client =>
 {
-    var url = builder.Configuration["WEATHER_URL"] 
-        ?? throw new InvalidOperationException("WEATHER_URL is not set");
+    var url = builder.Configuration["BACKEND_URL"]
+        ?? throw new InvalidOperationException("BACKEND_URL is not set");
 
-    c.BaseAddress = new(url);
+    client.BaseAddress = new(url);
 });
 
 var app = builder.Build();
@@ -21,7 +21,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.MapBlazorHub();

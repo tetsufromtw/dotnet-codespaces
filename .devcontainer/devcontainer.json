@@ -2,15 +2,8 @@
     "name": ".NET in Codespaces",
     "image": "mcr.microsoft.com/dotnet/sdk:10.0",
     "features": {
-        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
         "ghcr.io/devcontainers/features/github-cli:1": {
             "version": "2"
-        },
-        "ghcr.io/devcontainers/features/powershell:1": {
-            "version": "latest"
-        },
-        "ghcr.io/azure/azure-dev/azd:0": {
-            "version": "latest"
         },
         "ghcr.io/devcontainers/features/common-utils:2": {},
         "ghcr.io/devcontainers/features/dotnet:2": {
@@ -23,7 +16,6 @@
         "vscode": {
             "extensions": [
                 "ms-vscode.vscode-node-azure-pack",
-                "GitHub.copilot",
                 "GitHub.vscode-github-actions",
                 "ms-dotnettools.csdevkit"
             ]
@@ -31,24 +23,25 @@
     },
     "forwardPorts": [
         8080,
-        8081
+        8081,
+        8082
     ],
-    "postCreateCommand": "dotnet new install Aspire.ProjectTemplates && cd ./SampleApp && dotnet restore",
-    "hostRequirements": {
-        "memory": "8gb",
-        "cpus": 4
-    },
+    "postCreateCommand": "cd ./SampleApp && dotnet restore",
     "remoteEnv": {
         "DOTNET_MULTILEVEL_LOOKUP": "0",
         "TARGET": "net10.0"
     },
     "portsAttributes": {
         "8080": {
-            "label": "Weather API",
+            "label": "Transaction Integration API",
             "onAutoForward": "notify"
         },
         "8081": {
-            "label": "Weather Front End",
+            "label": "Transaction Console",
+            "onAutoForward": "notify"
+        },
+        "8082": {
+            "label": "Partner Bank Stub",
             "onAutoForward": "notify"
         }
     }

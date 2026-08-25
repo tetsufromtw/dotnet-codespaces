@@ -25,30 +25,51 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-app.UseHttpsRedirection();
+app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 
-var summaries = new[]
+var placeholderTransactions = new[]
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+    new TransactionView(
+        "LOCAL-001",
+        DateTimeOffset.UtcNow.AddDays(-2),
+        10000m,
+        "JPY",
+        "CREDIT",
+        "Placeholder transaction"),
+    new TransactionView(
+        "LOCAL-002",
+        DateTimeOffset.UtcNow.AddDays(-1),
+        2500m,
+        "JPY",
+        "DEBIT",
+        "Placeholder fee")
 };
 
-app.MapGet("/weatherforecast", () =>
+app.MapGet("/api/accounts/{accountId}/transactions", (
+    string accountId,
+    DateOnly? from) =>
 {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    if (!accountId.Equals("ACC-1001", StringComparison.OrdinalIgnoreCase))
+    {
+        return Results.NotFound();
+    }
+
+    var transactions = from is null
+        ? placeholderTransactions
+        : placeholderTransactions
+            .Where(transaction => DateOnly.FromDateTime(transaction.BookedAt.UtcDateTime) >= from.Value)
+            .ToArray();
+
+    return Results.Ok(transactions);
 })
-.WithName("GetWeatherForecast");
+.WithName("GetAccountTransactions");
 
 app.Run();
 
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+internal record TransactionView(
+    string Id,
+    DateTimeOffset BookedAt,
+    decimal Amount,
+    string Currency,
+    string Direction,
+    string Description);

@@ -8,12 +8,28 @@
 				"order": 1
 			},
             "configurations": [
+                "PartnerBankStub",
                 "BackEnd",
                 "FrontEnd"
             ]
         }
     ],
     "configurations": [
+        {
+            "name": "PartnerBankStub",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/Support/PartnerBankStub/PartnerBankStub.dll",
+            "args": [
+                "--urls",
+                "http://localhost:8082"
+            ],
+            "cwd": "${workspaceFolder}/Support/PartnerBankStub",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            }
+        },
         {
             "name": "BackEnd",
             "type": "coreclr",
