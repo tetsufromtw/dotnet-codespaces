@@ -1,0 +1,95 @@
+@page "/"
+@using FrontEnd.Data
+@inject TransactionClient TransactionClient
+
+<PageTitle>Transaction Console</PageTitle>
+
+<h1>Transaction Console</h1>
+
+<p>Review account transactions imported through the integration API.</p>
+
+<div class="row g-2 align-items-end mb-4">
+    <div class="col-sm-5">
+        <label for="account-id" class="form-label">Account ID</label>
+        <input id="account-id" class="form-control" @bind="accountId" />
+    </div>
+    <div class="col-auto">
+        <button class="btn btn-primary" @onclick="LoadTransactionsAsync" disabled="@isLoading">
+            Load transactions
+        </button>
+    </div>
+</div>
+
+@if (isLoading)
+{
+    <p><em>Loading...</em></p>
+}
+else if (errorMessage is not null)
+{
+    <div class="alert alert-danger" role="alert">@errorMessage</div>
+}
+else if (transactions is { Length: 0 })
+{
+    <div class="alert alert-info" role="status">No transactions were found.</div>
+}
+else if (transactions is not null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Booked at</th>
+                <th>Direction</th>
+                <th class="text-end">Amount</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var transaction in transactions)
+            {
+                <tr>
+                    <td>@transaction.Id</td>
+                    <td>@transaction.BookedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@transaction.Direction</td>
+                    <td class="text-end">@transaction.Amount.ToString("N0") @transaction.Currency</td>
+                    <td>@transaction.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private const string DefaultAccountId = "ACC-1001";
+
+    private string accountId = DefaultAccountId;
+    private TransactionView[]? transactions;
+    private string? errorMessage;
+    private bool isLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadTransactionsAsync();
+    }
+
+    private async Task LoadTransactionsAsync()
+    {
+        isLoading = true;
+        errorMessage = null;
+
+        try
+        {
+            var from = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-30));
+            transactions = await TransactionClient.GetTransactionsAsync(accountId, from);
+        }
+        catch (HttpRequestException exception)
+        {
+            transactions = null;
+            errorMessage = $"The transaction service could not complete the request: {exception.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}
